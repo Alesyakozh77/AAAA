@@ -1,36 +1,33 @@
 #include <vector>
-std::vector<int> increaseVector(std::vector<int> vec, int num) 
+#include <gtest/gtest.h> 
+std::vector<int> increaseAllByN(const std::vector<int>& vec, int n)
 {
-  for (int i = 0; i &lt; vec.size(); i++) {
- 
-  vec[i] += num;
+    std::vector<int> result;
+    for (int num : vec) {
+        result.push_back(num + n);
     }
-    return vec;
+    return result;
 }
-#define CATCH_CONFIG_MAIN
-
-#include &quot;catch.hpp&quot;
-
-#include &quot;your_vector_function.hpp&quot;
-
-TEST_CASE(&quot;Increase vector elements by 4&quot;) {
-
-    std::vector&lt;int&gt; vec = {1, 2, 3, 4, 5};
-
-    std::vector&lt;int&gt; expected = {5, 6, 7, 8, 9};
-
-    std::vector&lt;int&gt; result = increaseVector(vec, 4);
-
-    REQUIRE(result == expected);
+class IncreaseAllByNTest : public ::testing::Test {
+protected:  
+    virtual void SetUp() {  
+        vector = {1, 2, 3};
+    }    
+    std::vector<int> vector;
+};
+TEST_F(IncreaseAllByNTest, IncreaseByOne) {
+    auto result = increaseAllByN(vector, 1);
+    ASSERT_THAT(result, ::testing::ElementsAre(2, 3, 4));
 }
-
-TEST_CASE(&quot;Increase empty vector by 4&quot;) {
-
-    std::vector&lt;int&gt; vec;
-
-    std::vector&lt;int&gt; expected;
-
-    std::vector&lt;int&gt; result = increaseVector(vec, 4);
-
-    REQUIRE(result == expected);
+TEST_F(IncreaseAllByNTest, IncreaseByTwo) {
+    auto result = increaseAllByN(vector, 2);
+    ASSERT_THAT(result, ::testing::ElementsAre(3, 4, 5));
+}
+TEST_F(IncreaseAllByNTest, NoChange) {
+    auto result = increaseAllByN(vector, 0);
+    ASSERT_THAT(result, ::testing::ElementsAre(1, 2, 3));
+}
+int main(int argc, char  *  * argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
